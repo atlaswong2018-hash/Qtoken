@@ -21,6 +21,10 @@
 - **类型安全**：完整的 TypeScript 类型定义
 - **API 验证**：使用 Zod 进行输入验证
 - **测试覆盖**：单元测试和 API 测试
+- **分页功能**：智能分页导航，优化大数据量显示
+- **加载状态**：统一的加载状态和骨架屏
+- **错误处理**：错误边界和自定义错误页面
+- **动画效果**：流畅的过渡动画和滚动条
 
 ## 技术栈
 
@@ -130,12 +134,19 @@ npm run dev
 │   ├── projects/            # 项目页面
 │   ├── register/            # 注册页面
 │   ├── settings/            # 账户设置
+│   ├── error.tsx           # 全局错误处理
+│   ├── not-found.tsx       # 404 页面
 │   └── page.tsx            # 首页
 ├── components/               # React 组件
-│   ├── navigation/          # 导航组件
-│   ├── project/             # 项目相关组件
-│   ├── providers/           # Context Providers
-│   └── ui/                 # shadcn/ui 组件
+│   ├── error/             # 错误处理组件
+│   ├── filters/            # 筛选和搜索组件
+│   ├── loading/           # 加载状态组件
+│   ├── navigation/         # 导航组件
+│   ├── pagination/        # 分页组件
+│   ├── project/           # 项目相关组件
+│   ├── providers/         # Context Providers
+│   ├── states/            # 空状态组件
+│   └── ui/                # shadcn/ui 组件
 ├── lib/                     # 工具库
 │   ├── auth-config.ts       # NextAuth 配置
 │   ├── auth.ts             # 认证工具
@@ -144,6 +155,7 @@ npm run dev
 │   ├── telegram.ts         # Telegram 集成
 │   ├── utils.ts            # 工具函数
 │   └── validations.ts      # Zod 验证模式
+├── types/                   # TypeScript 类型定义
 ├── prisma/                  # Prisma 相关
 │   ├── schema.prisma       # 数据库模型
 │   └── migrations/         # 数据库迁移
