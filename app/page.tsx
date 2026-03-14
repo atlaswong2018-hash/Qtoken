@@ -4,8 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import ProjectCard from '@/components/project/ProjectCard'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import ProjectFilters from '@/components/filters/ProjectFilters'
 
 interface Project {
   id: string
@@ -64,33 +63,13 @@ export default function HomePage() {
         </div>
 
         <div className="mb-8">
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 gap-4">
-              <Input
-                placeholder="搜索项目..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="max-w-md bg-[#1e1f22] border-[#1e1f22] text-white"
-              />
-              <select
-                value={tag}
-                onChange={(e) => setTag(e.target.value)}
-                className="bg-[#1e1f22] border-[#1e1f22] text-white rounded-md px-3 py-2"
-              >
-                <option value="">所有标签</option>
-                <option value="ai">AI</option>
-                <option value="machine-learning">机器学习</option>
-                <option value="computer-vision">计算机视觉</option>
-                <option value="nlp">自然语言处理</option>
-              </select>
-            </div>
-            <Button
-              className="bg-discord-accent hover:bg-[#4752c4]"
-              onClick={() => router.push('/projects/new')}
-            >
-              创建项目
-            </Button>
-          </div>
+          <ProjectFilters
+            search={search}
+            onSearchChange={setSearch}
+            tag={tag}
+            onTagChange={setTag}
+            onCreateProject={() => router.push('/projects/new')}
+          />
         </div>
 
         {loading ? (

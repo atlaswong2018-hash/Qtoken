@@ -4,8 +4,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import ProjectCard from '@/components/project/ProjectCard'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Pagination } from '@/components/pagination/Pagination'
+import ProjectFilters from '@/components/filters/ProjectFilters'
+import LoadingSpinner from '@/components/loading/LoadingSpinner'
+import EmptyState from '@/components/states/EmptyState'
 
 interface Project {
   id: string
@@ -30,16 +32,31 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [tag, setTag] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 12,
+    total: 0,
+    totalPages: 1
+  })
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (page: number = currentPage) => {
     setLoading(true)
     try {
       const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('limit', pagination.limit.toString())
       if (search) params.append('search', search)
       if (tag) params.append('tag', tag)
       const response = await fetch(`/api/projects?${params}`)
       const data = await response.json()
       setProjects(data.projects || [])
+      setPagination({
+        ...pagination,
+        page: data.pagination?.page || page,
+        total: data.pagination?.total || 0,
+        totalPages: data.pagination?.totalPages || 1
+      })
     } catch (error) {
       console.error('Failed to fetch projects:', error)
     } finally {
@@ -48,8 +65,14 @@ export default function ProjectsPage() {
   }
 
   useEffect(() => {
-    fetchProjects()
+    fetchProjects(1)
   }, [search, tag])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    fetchProjects(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-screen bg-discord-bg pt-8">
@@ -71,44 +94,53 @@ export default function ProjectsPage() {
           </Button>
         </div>
 
-        <div className="mb-8 bg-[#2b2d31] rounded-lg p-4">
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <Input
-                placeholder="搜索项目..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="bg-[#1e1f22] border-[#1e1f22] text-white"
-              />
-            </div>
-            <select
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              className="bg-[#1e1f22] border-[#1e1f22] text-white rounded-md px-3 py-2"
-            >
-              <option value="">所有标签</option>
-              <option value="ai">AI</option>
-              <option value="machine-learning">机器学习</option>
-              <option value="computer-vision">计算机视觉</option>
-              <option value="nlp">自然语言处理</option>
-            </select>
-          </div>
-        </div>
+        <ProjectFilters
+          search={search}
+          onSearchChange={setSearch}
+          tag={tag}
+          onTagChange={setTag}
+          onCreateProject={() => router.push('/projects/new')}
+        />
 
         {loading ? (
-          <div className="text-discord-muted text-center py-12">
-            加载中...
-          </div>
+          <LoadingSpinner />
         ) : projects.length === 0 ? (
-          <div className="text-discord-muted text-center py-12">
-            {search || tag ? '没有找到匹配的项目' : '暂无项目'}
-          </div>
+          <EmptyState
+            title={search || tag ? '没有找到匹配的项目' : '暂无项目'}
+            description={
+              search || tag
+                ? '尝试调整搜索关键词或筛选条件'
+                : '成为第一个创建项目的用户吧！'
+            }
+            action={
+              !search && !tag
+                ? {
+                    label: '创建项目',
+                    onClick: () => router.push('/projects/new')
+                  }
+                : undefined
+            }
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+
+            {pagination.totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+
+            <div className="text-center text-discord-muted mt-4">
+              共 {pagination.total} 个项目，第 {pagination.page} / {pagination.totalPages} 页
+            </div>
+          </>
         )}
       </div>
     </div>
