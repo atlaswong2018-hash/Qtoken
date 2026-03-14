@@ -10,10 +10,19 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const communityId = searchParams.get('communityId')
+    const authorId = searchParams.get('authorId')
 
     const skip = (page - 1) * limit
-    const where: any = {
-      communityId: { equals: communityId }
+    const where: any = {}
+
+    // 作者筛选
+    if (authorId) {
+      where.authorId = authorId
+    }
+
+    // 社区筛选
+    if (communityId) {
+      where.communityId = communityId
     }
 
     // 获取帖子列表

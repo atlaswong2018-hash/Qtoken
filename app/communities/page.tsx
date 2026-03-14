@@ -25,11 +25,16 @@ export default function CommunitiesPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-discord-bg p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">
-          社区
-        </h1>
+    <div className="min-h-screen bg-discord-bg pt-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            社区
+          </h1>
+          <p className="text-discord-muted">
+            加入感兴趣的社区，与其他开发者交流
+          </p>
+        </div>
 
         {loading ? (
           <div className="text-discord-muted text-center py-12">

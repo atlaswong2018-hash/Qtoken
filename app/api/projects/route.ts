@@ -12,9 +12,15 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '10')
     const tag = searchParams.get('tag')
     const search = searchParams.get('search')
+    const authorId = searchParams.get('authorId')
 
     const skip = (page - 1) * limit
     const where: any = {}
+
+    // 作者筛选
+    if (authorId) {
+      where.authorId = authorId
+    }
 
     // 标签筛选
     if (tag) {

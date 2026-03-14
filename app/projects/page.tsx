@@ -1,4 +1,4 @@
-// app/page.tsx
+// app/projects/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -24,7 +24,7 @@ interface Project {
   }
 }
 
-export default function HomePage() {
+export default function ProjectsPage() {
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -52,44 +52,46 @@ export default function HomePage() {
   }, [search, tag])
 
   return (
-    <div className="min-h-screen bg-discord-bg">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            AI 作品广场
-          </h1>
-          <p className="text-discord-muted mb-6">
-            发现和分享精彩的 AI 项目，与社区一起成长
-          </p>
+    <div className="min-h-screen bg-discord-bg pt-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              项目广场
+            </h1>
+            <p className="text-discord-muted">
+              发现和分享精彩的 AI 项目，与社区一起成长
+            </p>
+          </div>
+          <Button
+            onClick={() => router.push('/projects/new')}
+            className="bg-discord-accent hover:bg-[#4752c4]"
+          >
+            创建项目
+          </Button>
         </div>
 
-        <div className="mb-8">
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 gap-4">
+        <div className="mb-8 bg-[#2b2d31] rounded-lg p-4">
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
               <Input
                 placeholder="搜索项目..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="max-w-md bg-[#1e1f22] border-[#1e1f22] text-white"
+                className="bg-[#1e1f22] border-[#1e1f22] text-white"
               />
-              <select
-                value={tag}
-                onChange={(e) => setTag(e.target.value)}
-                className="bg-[#1e1f22] border-[#1e1f22] text-white rounded-md px-3 py-2"
-              >
-                <option value="">所有标签</option>
-                <option value="ai">AI</option>
-                <option value="machine-learning">机器学习</option>
-                <option value="computer-vision">计算机视觉</option>
-                <option value="nlp">自然语言处理</option>
-              </select>
             </div>
-            <Button
-              className="bg-discord-accent hover:bg-[#4752c4]"
-              onClick={() => router.push('/projects/new')}
+            <select
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              className="bg-[#1e1f22] border-[#1e1f22] text-white rounded-md px-3 py-2"
             >
-              创建项目
-            </Button>
+              <option value="">所有标签</option>
+              <option value="ai">AI</option>
+              <option value="machine-learning">机器学习</option>
+              <option value="computer-vision">计算机视觉</option>
+              <option value="nlp">自然语言处理</option>
+            </select>
           </div>
         </div>
 
@@ -99,7 +101,7 @@ export default function HomePage() {
           </div>
         ) : projects.length === 0 ? (
           <div className="text-discord-muted text-center py-12">
-            暂无项目
+            {search || tag ? '没有找到匹配的项目' : '暂无项目'}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
