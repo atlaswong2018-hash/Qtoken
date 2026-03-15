@@ -7,6 +7,7 @@
 - [x] 包转译配置已添加 (`transpilePackages: ['lucide-react']`)
 - [x] Vercel配置文件已创建 (`vercel.json`)
 - [x] 环境变量配置示例已准备 (`.env.example`)
+- [x] 根布局文件已修复 (`app/layout.tsx`) ✅ **关键修复**
 
 ### ✅ 项目功能完成
 - [x] 用户认证系统（注册、登录、会话管理）
@@ -64,8 +65,21 @@
 
 - [x] 所有代码已提交到GitHub
 - [x] Vercel配置修复已提交
+- [x] **关键修复：根 layout.tsx 文件已创建并推送** ✅
 - [x] 准备部署完成
 - [ ] 可以立即重新部署到Vercel
+
+## 🔧 问题修复记录
+
+### 2026-03-15: 404 NOT_FOUND 错误修复
+**问题**: Vercel 部署显示 "Ready" 状态，但访问 qtoken-ai.vercel.app 返回 404 NOT_FOUND 错误
+**根本原因**: 项目缺少 Next.js App Router 必需的根 `app/layout.tsx` 文件
+**解决方案**: 创建 `app/layout.tsx` 文件，包含：
+- 基本的 HTML 结构（`<html>`, `<body>`）
+- 元数据配置（标题、描述）
+- Inter 字体集成
+- 全局样式引用
+**结果**: 代码已提交并推送到 GitHub，等待重新部署验证
 
 ## 🎯 下一步建议
 
