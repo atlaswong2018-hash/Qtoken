@@ -9,12 +9,6 @@
     "NEXTAUTH_URL": "https://qtoken-ai.vercel.app",
     "TELEGRAM_BOT_TOKEN": "",
     "TELEGRAM_CHANNEL_ID": ""
-  },
-  "build": {
-    "env": {
-      "DATABASE_URL": "@database_url",
-      "NEXTAUTH_SECRET": "@nextauth_secret",
-      "NEXTAUTH_URL": "@nextauth_url"
-    }
   }
+}
 }
