@@ -25,11 +25,15 @@
   "homepage": "https://github.com/atlaswong2018-hash/Qtoken#readme",
   "dependencies": {
     "@prisma/client": "^7.5.0",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "bcryptjs": "^3.0.3",
     "next": "^16.1.6",
     "next-auth": "^4.24.13",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^4.3.6"
   },
   "devDependencies": {
