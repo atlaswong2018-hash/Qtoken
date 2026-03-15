@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import ProjectCard from '@/components/project/ProjectCard'
+import Navigation from '@/components/Navigation'
 
 interface Project {
   id: string
@@ -53,6 +54,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#313338]">
+      <Navigation />
+      <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#f2f3f5] mb-4">
