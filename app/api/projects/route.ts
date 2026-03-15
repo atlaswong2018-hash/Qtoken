@@ -35,11 +35,25 @@ export async function GET(request: Request) {
 
     // 私密内容筛选
     if (includePrivate) {
-      // TODO: 添加权限检查
-      // const canAccessPrivate = await checkPermission('access_private_projects')
-      // if (!canAccessPrivate.hasPermission) {
-      //   where.isPrivate = false
-      // }
+      const session = await auth()
+      if (!session?.user) {
+        // 未登录用户只能查看公开内容
+        where.isPrivate = false
+      } else {
+        // 已登录用户检查权限
+        const canAccessPrivate = await prisma.userTier.findFirst({
+          where: {
+            id: session.user.tierId || undefined,
+            permissions: {
+              has: 'view_private_content'
+            }
+          }
+        })
+
+        if (!canAccessPrivate) {
+          where.isPrivate = false
+        }
+      }
     }
 
     // 获取项目列表
