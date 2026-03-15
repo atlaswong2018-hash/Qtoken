@@ -1,15 +1,20 @@
 {
   "name": "discord2",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AI社区平台 - 类似Discord的AI开发者社区，支持项目分享、发帖互动和Telegram同步",
   "directories": {
     "doc": "docs",
     "lib": "lib",
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "seed": "tsx prisma/seed.ts",
+    "studio": "prisma studio"
   },
   "repository": {
     "type": "git",
@@ -52,6 +57,7 @@
     "prisma": "^7.5.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   }
