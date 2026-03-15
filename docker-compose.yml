@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-community-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: discord2_user
+      POSTGRES_PASSWORD: discord2_password
+      POSTGRES_DB: discord2_db
+      POSTGRES_HOST: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U discord2_user -d discord2_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # AI 社区平台应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-community-platform
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://discord2_user:discord2_password@postgres:5432/discord2_db
+      NEXTAUTH_SECRET: your-secret-key-here-min-32-characters-long
+      NEXTAUTH_URL: http://localhost:3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health", "--timeout=5", "O", "/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_data:
+    driver: local

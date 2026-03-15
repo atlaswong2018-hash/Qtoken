@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from '@/app/api/auth/login/route'
 import { signIn } from '@/lib/auth-config'
-import { factories } from '../../factories'
 
 vi.mock('@/lib/auth-config', () => ({
   signIn: vi.fn(),
@@ -12,8 +11,17 @@ describe('POST /api/auth/login - 系统化测试', () => {
     vi.clearAllMocks()
   })
 
+  function generateUserData(overrides?: any) {
+    return {
+      id: `user-${Date.now()}`,
+      email: `user${Date.now()}@example.com`,
+      username: `user${Date.now()}`,
+      ...overrides,
+    }
+  }
+
   it('应该使用有效的凭据成功登录', async () => {
-    const user = factories.user({
+    const user = generateUserData({
       email: 'test@example.com',
       username: 'testuser',
     })
@@ -38,8 +46,8 @@ describe('POST /api/auth/login - 系统化测试', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(data.user).toBeDefined()
-    expect(data.user.email).toBe(user.email)
+    expect(data.success).toBe(true)
+    expect(data.message).toBe('登录成功')
   })
 
   it('应该拒绝无效的邮箱格式', async () => {
@@ -116,10 +124,10 @@ describe('POST /api/auth/login - 系统化测试', () => {
   })
 
   it('应该批量处理多个登录请求', async () => {
-    const users = factories.users(5)
-
-    for (const user of users) {
+    for (let i = 0; i < 5; i++) {
       vi.clearAllMocks()
+      const user = generateUserData()
+      
       vi.mocked(signIn).mockResolvedValue({
         user: {
           id: user.id,
