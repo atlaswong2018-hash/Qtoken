@@ -43,8 +43,8 @@ export async function GET(request: Request) {
                   level: true,
                   color: true
                 }
-              }
-            }
+  }
+}
           }
         },
         orderBy: { createdAt: 'desc' }
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
                 level: true,
                 color: true
               }
-            }
+  }
           }
         }
       }

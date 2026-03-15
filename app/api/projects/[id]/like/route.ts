@@ -42,7 +42,6 @@ export async function POST(
       })
       return NextResponse.json({ liked: true, like })
     }
-    }
   } catch (error) {
     console.error('点赞错误:', error)
     return NextResponse.json(

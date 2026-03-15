@@ -37,8 +37,8 @@ export async function GET(
                   level: true,
                   color: true
                 }
-              }
-            }
+  }
+}
           }
         },
         orderBy: { joinedAt: 'desc' }
@@ -120,8 +120,8 @@ export async function POST(
         select: {
           tier: {
             select: { level: true }
-          }
-        }
+  }
+}
       })
 
       const userLevel = currentUser?.tier?.level || 0
@@ -152,8 +152,7 @@ export async function POST(
                 level: true,
                 color: true
               }
-            }
-          }
+    }
         }
       }
     }
@@ -196,8 +195,8 @@ export async function DELETE(
           select: {
             ownerId: true
           }
-        }
-      }
+  }
+}
     })
 
     if (!member) {
@@ -222,8 +221,8 @@ export async function DELETE(
           userId: session.user.id,
           communityId
         }
-      }
-    })
+  }
+})
 
     return NextResponse.json({ success: true })
   } catch (error) {
