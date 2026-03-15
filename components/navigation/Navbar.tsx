@@ -4,6 +4,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
+import GlobalSearch from '@/components/search/GlobalSearch'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -21,7 +22,7 @@ export default function Navbar() {
   return (
     <nav className="bg-[#1e1f22] border-b border-[#2b2d31] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-8">
           {/* Logo 和导航链接 */}
           <div className="flex items-center gap-8">
             <Link href="/" className="text-white font-bold text-xl">
@@ -44,6 +45,9 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+
+          {/* 全局搜索 */}
+          <GlobalSearch />
 
           {/* 用户菜单 */}
           <div className="flex items-center gap-4">
