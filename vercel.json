@@ -5,10 +5,10 @@
   "framework": "nextjs",
   "env": {
     "DATABASE_URL": "postgresql://postgres:Q11z1w2s2x2@ovcdwawtwnrhtsnyiez.supabase.co:5432/postgres",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
-    "TELEGRAM_CHANNEL_ID": "@telegram_channel_id"
+    "NEXTAUTH_SECRET": "fbcad0b83897e75a074628960a72aec8faf182f8d1715c060fcb5f9687e79a10",
+    "NEXTAUTH_URL": "https://qtoken-ai.vercel.app",
+    "TELEGRAM_BOT_TOKEN": "",
+    "TELEGRAM_CHANNEL_ID": ""
   },
   "build": {
     "env": {
