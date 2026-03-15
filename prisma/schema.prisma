@@ -1,0 +1,180 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String
+  avatar        String?
+  bio           String?   @db.Text
+  github        String?   @unique
+  twitter       String?
+  tierId        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  projects      Project[]
+  comments      Comment[]
+  likes         Like[]
+  posts         Post[]
+  notifications Notification[]
+  tier          UserTier?  @relation(fields: [tierId], references: [id], onDelete: SetNull)
+
+  @@index([tierId])
+}
+
+model UserTier {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  level         Int      @unique
+  description   String?  @db.Text
+  color         String   @default("#5865f2")
+  icon          String?
+  permissions   String[] // JSON 数组存储权限列表
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users         User[]
+
+  @@index([level])
+  @@index([active])
+}
+
+model CommunityRule {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  category    String   // 'general', 'posting', 'behavior', 'privacy'
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([active])
+  @@index([order])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  githubUrl   String?
+  codeSnippet String?  @db.Text
+  imageUrl    String?
+  tags        String[]
+  views       Int      @default(0)
+  isPrivate   Boolean  @default(false)
+  minTierRequired Int? // 最低等级要求
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([tags])
+  @@index([isPrivate])
+  @@index([minTierRequired])
+}
+
+model Community {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?  @db.Text
+  slug        String   @unique
+  icon        String?
+  memberCount Int      @default(0)
+  isPrivate   Boolean  @default(false)
+  minTierRequired Int? // 最低等级要求
+  createdAt   DateTime @default(now())
+
+  posts       Post[]
+
+  @@index([isPrivate])
+  @@index([minTierRequired])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  views     Int      @default(0)
+  isPrivate Boolean  @default(false)
+  minTierRequired Int? // 最低等级要求
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+
+  @@index([isPrivate])
+  @@index([minTierRequired])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  projectId  String?
+  project    Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  postId     String?
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  content   String?  @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model TelegramConfig {
+  id          String   @id @default(cuid())
+  botToken    String   @unique
+  channelId   String
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled])
+}
