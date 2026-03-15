@@ -4,7 +4,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "env": {
-    "DATABASE_URL": "@database_url",
+    "DATABASE_URL": "postgresql://postgres:Q11z1w2s2x2@ovcdwawtwnrhtsnyiez.supabase.co:5432/postgres",
     "NEXTAUTH_SECRET": "@nextauth_secret",
     "NEXTAUTH_URL": "@nextauth_url",
     "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
