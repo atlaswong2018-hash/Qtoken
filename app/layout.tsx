@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { SessionProvider } from 'next-auth/react'
+import { Providers } from '@/components/providers/Providers'
 import Navbar from '@/components/navigation/Navbar'
 import './globals.css'
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={inter.className}>
-        <SessionProvider>
+        <Providers>
           <div className="min-h-screen flex flex-col">
             <Navbar />
             <main className="flex-1">
@@ -33,7 +33,7 @@ export default function RootLayout({
               </div>
             </footer>
           </div>
-        </SessionProvider>
+        </Providers>
       </body>
     </html>
   )

@@ -1,7 +1,7 @@
 // app/search/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Search, FileText, MessageSquare, User, Folder, Users } from 'lucide-react'
@@ -20,7 +20,7 @@ interface SearchResult {
   createdAt?: string
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
 
@@ -392,3 +392,12 @@ export default function SearchPage() {
     </div>
   )
 }
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">加载中...</div>}>
+      <SearchContent />
+    </Suspense>
+  )
+}
+
