@@ -86,7 +86,8 @@ export default function PostDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!session?.user || post?.author.id !== session.user.id) {
+    const userId = (session?.user as any)?.id
+    if (!session?.user || post?.author.id !== userId) {
       alert('只有作者才能删除帖子')
       return
     }
