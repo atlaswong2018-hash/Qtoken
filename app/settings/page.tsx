@@ -18,18 +18,18 @@ export default function SettingsPage() {
   const { data: session, update } = useSession()
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile')
   const [loading, setLoading] = useState(false)
-  const [avatar, setAvatar] = useState<string | null>(session?.user?.avatar || null)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(session?.user?.avatar || null)
+  const [avatar, setAvatar] = useState<string | null>((session?.user as any)?.avatar || null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>((session?.user as any)?.avatar || null)
 
   // 个人资料表单
   const [profileData, setProfileData] = useState({
-    username: session?.user?.username || '',
+    username: (session?.user as any)?.username || '',
     email: session?.user?.email || '',
-    bio: session?.user?.bio || '',
-    location: session?.user?.location || '',
-    website: session?.user?.website || '',
-    github: session?.user?.github || '',
-    twitter: session?.user?.twitter || '',
+    bio: (session?.user as any)?.bio || '',
+    location: (session?.user as any)?.location || '',
+    website: (session?.user as any)?.website || '',
+    github: (session?.user as any)?.github || '',
+    twitter: (session?.user as any)?.twitter || '',
   })
   const [profileErrors, setProfileErrors] = useState<Record<string, string>>({})
   const [profileSaving, setProfileSaving] = useState(false)
@@ -45,17 +45,18 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (session?.user) {
+      const user = session.user as any
       setProfileData({
-        username: session.user.username || '',
-        email: session.user.email || '',
-        bio: session.user.bio || '',
-        location: session.user.location || '',
-        website: session.user.website || '',
-        github: session.user.github || '',
-        twitter: session.user.twitter || '',
+        username: user?.username || '',
+        email: user?.email || '',
+        bio: user?.bio || '',
+        location: user?.location || '',
+        website: user?.website || '',
+        github: user?.github || '',
+        twitter: user?.twitter || '',
       })
-      setAvatar(session.user.avatar || null)
-      setAvatarPreview(session.user.avatar || null)
+      setAvatar(user?.avatar || null)
+      setAvatarPreview(user?.avatar || null)
     }
   }, [session?.user])
 
@@ -237,13 +238,13 @@ export default function SettingsPage() {
             <Avatar className="h-20 w-20">
               <AvatarImage src={avatarPreview || undefined} />
               <AvatarFallback className="text-3xl bg-discord-accent text-white">
-                {session?.user?.username[0]?.toUpperCase()}
+                {(session?.user as any)?.username?.charAt(0)?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
 
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-white">
-                {session?.user?.username}
+                {(session?.user as any)?.username}
               </h2>
               <p className="text-discord-muted text-sm">
                 {session?.user?.email}
@@ -255,7 +256,7 @@ export default function SettingsPage() {
                   管理员
                 </Badge>
                 <span className="text-discord-muted text-sm">
-                  加入于 {new Date(session?.user?.createdAt || '').toLocaleDateString('zh-CN')}
+                  加入于 {new Date((session?.user as any)?.createdAt || '').toLocaleDateString('zh-CN')}
                 </span>
               </div>
             </div>
@@ -263,8 +264,8 @@ export default function SettingsPage() {
 
           <div className="border-t border-[#1e1f22] pt-4 mt-4">
             <div className="flex gap-4 text-sm text-discord-muted">
-              <span>ID: {session?.user?.id}</span>
-              <span>创建于: {new Date(session?.user?.createdAt || '').toLocaleString('zh-CN')}</span>
+              <span>ID: {(session?.user as any)?.id}</span>
+              <span>创建于: {new Date((session?.user as any)?.createdAt || '').toLocaleString('zh-CN')}</span>
             </div>
           </div>
         </CardContent>

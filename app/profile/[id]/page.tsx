@@ -114,7 +114,7 @@ export default function UserProfilePage() {
     fetchUserData()
   }, [userId])
 
-  const isOwnProfile = session?.user?.id === userId
+  const isOwnProfile = (session?.user as any)?.id === userId
 
   if (loading) {
     return (
@@ -248,7 +248,7 @@ export default function UserProfilePage() {
                   </a>
                 )}
 
-                {session?.user?.id !== userId && (
+                {(session?.user as any)?.id !== userId && (
                   <a
                     href={`mailto:${user.email}`}
                     className="text-discord-accent hover:text-white flex items-center gap-1 transition-colors"

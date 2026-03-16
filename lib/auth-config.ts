@@ -3,6 +3,25 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import prisma from './prisma'
 import { hashPassword, verifyPassword } from './auth'
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string
+    username?: string
+    avatar?: string
+  }
+}
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      username?: string
+      avatar?: string
+      email?: string
+    }
+  }
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -56,13 +75,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
+        token.id = user.id as string
+        token.username = user.name as string
+        token.avatar = user.image as string
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id
+        session.user.id = token.id as string
+        session.user.username = token.username
+        session.user.avatar = token.avatar
       }
       return session
     }

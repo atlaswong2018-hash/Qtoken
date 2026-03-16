@@ -16,13 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
 export default function Navbar() {
@@ -30,6 +23,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const user = session?.user as any
 
   // 模拟获取未读通知数量
   useEffect(() => {
@@ -37,7 +31,7 @@ export default function Navbar() {
       // 这里应该调用 API 获取真实的未读数量
       setUnreadCount(3)
     }
-  }, [session])
+  }, [user])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -157,15 +151,15 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="rounded-full">
                       <Avatar className="h-8 w-8">
-                        {session.user.avatar ? (
+                        {user.avatar ? (
                           <img
-                            src={session.user.avatar}
-                            alt={session.user.name || session.user.email || '用户'}
+                            src={user.avatar}
+                            alt={user.name || user.email || '用户'}
                             className="object-cover"
                           />
                         ) : (
                           <div className="bg-discord-accent h-full w-full flex items-center justify-center text-white font-semibold">
-                            {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                            {user.name?.[0] || user.email?.[0] || 'U'}
                           </div>
                         )}
                       </Avatar>
@@ -175,16 +169,16 @@ export default function Navbar() {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
-                          {session.user.name || session.user.email}
+                          {user.name || user.email}
                         </p>
                         <p className="text-xs leading-none text-discord-muted">
-                          {session.user.email}
+                          {user.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href={`/profile/${session.user.id}`} className="flex items-center gap-2 cursor-pointer">
+                      <Link href={`/profile/${user.id}`} className="flex items-center gap-2 cursor-pointer">
                         <User size={16} />
                         <span>个人主页</span>
                       </Link>
@@ -267,7 +261,7 @@ export default function Navbar() {
               <>
                 <div className="border-t border-[#1e1f22] my-2" />
                 <Link
-                  href={`/profile/${session.user.id}`}
+                  href={`/profile/${user.id}`}
                   className="px-4 py-2 text-discord-muted hover:text-white hover:bg-[#35373c] transition-colors flex items-center gap-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

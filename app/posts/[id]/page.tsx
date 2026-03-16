@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -354,7 +354,7 @@ export default function PostDetailPage() {
           <CardContent>
             <CommentList
               comments={comments}
-              postId={postId}
+              postId={postId as string}
               onCommentAdded={(comment) => {
                 setComments((prev) => [...prev, comment])
               }}

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Trash2, MoreHorizontal, MessageSquare } from 'lucide-react'
+import Link from 'next/link'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -262,7 +263,7 @@ export default function CommentList({
                     </div>
 
                     {/* 评论操作菜单 */}
-                    {session?.user?.id === comment.author.id && (
+                    {(session?.user as any)?.id === comment.author.id && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-discord-muted hover:text-white">
