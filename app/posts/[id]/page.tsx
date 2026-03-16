@@ -204,7 +204,7 @@ export default function PostDetailPage() {
 
                 <div className="flex items-center gap-2">
                   {/* 操作按钮 */}
-                  {session?.user?.id === post.author.id && (
+                  {(session?.user as any)?.id === post.author.id && (
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
