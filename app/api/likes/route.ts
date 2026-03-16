@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 const likeSchema = z.object({
-  projectId: z.string().optional(),
-  postId: z.string().optional()
-}).refine(data => data.projectId || data.postId, {
-  message: '必须指定项目或帖子ID'
+  projectId: z.string()
 })
 
 // POST - 添加点赞
@@ -28,10 +25,7 @@ export async function POST(request: Request) {
     const existingLike = await prisma.like.findFirst({
       where: {
         userId: session.user.id,
-        AND: [
-          { projectId: validatedData.projectId || null },
-          { postId: validatedData.postId || null }
-        ]
+        projectId: validatedData.projectId
       }
     })
 
@@ -46,8 +40,7 @@ export async function POST(request: Request) {
     const like = await prisma.like.create({
       data: {
         userId: session.user.id,
-        projectId: validatedData.projectId,
-        postId: validatedData.postId
+        projectId: validatedData.projectId
       }
     })
 

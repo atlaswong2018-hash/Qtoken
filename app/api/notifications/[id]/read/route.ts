@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // PUT - 标记通知为已读
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -16,7 +16,7 @@ export async function PUT(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     // 查找通知
     const notification = await prisma.notification.findUnique({

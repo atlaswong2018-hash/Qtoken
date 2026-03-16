@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // DELETE - 删除评论
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -16,7 +16,7 @@ export async function DELETE(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     // 查找评论
     const comment = await prisma.comment.findUnique({

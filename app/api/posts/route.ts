@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { auth } from '@/lib/auth-config'
 import { z } from 'zod'
 
 const postSchema = z.object({
   title: z.string().min(1, '标题不能为空').max(200, '标题最多200字符'),
   content: z.string().min(1, '内容不能为空').max(2000, '内容最多2000字符'),
-  communityId: z.string().optional(),
   isPrivate: z.boolean().optional(),
   minTierRequired: z.number().int().min(0).optional()
 })
@@ -23,12 +22,10 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit
 
     const where: any = {}
-
     // 社区筛选
     if (communityId) {
       where.communityId = communityId
     }
-
     // 搜索功能
     if (search) {
       where.OR = [
@@ -61,13 +58,7 @@ export async function GET(request: Request) {
             select: {
               id: true,
               name: true,
-              avatar: true
-            }
-          },
-          _count: {
-            select: {
-              likes: true,
-              comments: true
+              icon: true
             }
           }
         },
@@ -110,8 +101,13 @@ export async function POST(request: Request) {
 
     const post = await prisma.post.create({
       data: {
-        ...validatedData,
-        authorId: session.user.id
+        title: validatedData.title,
+        content: validatedData.content,
+        isPrivate: validatedData.isPrivate,
+        minTierRequired: validatedData.minTierRequired,
+        author: {
+          connect: { id: session.user.id }
+        }
       },
       include: {
         author: {
@@ -132,13 +128,7 @@ export async function POST(request: Request) {
           select: {
             id: true,
             name: true,
-            avatar: true
-          }
-        },
-        _count: {
-          select: {
-            likes: true,
-            comments: true
+            icon: true
           }
         }
       }

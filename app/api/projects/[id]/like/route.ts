@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // POST - 点赞项目
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -16,7 +16,7 @@ export async function POST(
       )
     }
 
-    const { id: projectId } = params
+    const { id: projectId } = await context.params
 
     // 检查是否已点赞
     const existingLike = await prisma.like.findFirst({

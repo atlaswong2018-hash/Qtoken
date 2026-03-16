@@ -1,12 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-      },
-    },
-})
+const prisma = new PrismaClient()
 
 async function main() {
   console.log('开始种子数据...')
@@ -140,12 +134,18 @@ async function main() {
   ]
 
   for (const rule of rules) {
-    await prisma.communityRule.upsert({
-      where: { title: rule.title },
-      update: {},
-      create: rule
+    const existingRule = await prisma.communityRule.findFirst({
+      where: { title: rule.title }
     })
-    console.log(`创建规则: ${rule.title}`)
+
+    if (!existingRule) {
+      await prisma.communityRule.create({
+        data: rule
+      })
+      console.log(`创建规则: ${rule.title}`)
+    } else {
+      console.log(`规则已存在: ${rule.title}`)
+    }
   }
 
   console.log('种子数据完成！')

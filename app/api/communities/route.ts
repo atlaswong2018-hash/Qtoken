@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { auth } from '@/lib/auth-config'
 import { z } from 'zod'
 
@@ -84,7 +84,10 @@ export async function POST(request: Request) {
     const community = await prisma.community.create({
       data: {
         ...validatedData,
-        ownerId: session.user.id
+        slug: validatedData.name.toLowerCase().replace(/\s+/g, '-'),
+        owner: {
+          connect: { id: session.user.id }
+        }
       },
       include: {
         _count: {

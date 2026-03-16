@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // PUT - 标记所有通知为已读
 export async function PUT(request: Request) {

@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // GET - 获取社区详情
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params
+    const { id } = await context.params
 
     const community = await prisma.community.findUnique({
       where: { id },
@@ -102,7 +102,7 @@ export async function GET(
 // DELETE - 删除社区
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -113,7 +113,7 @@ export async function DELETE(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     // 查找社区
     const community = await prisma.community.findUnique({

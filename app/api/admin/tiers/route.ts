@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 const tierSchema = z.object({
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
 // PUT - 更新等级
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -87,7 +87,7 @@ export async function PUT(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
     const body = await request.json()
     const validatedData = tierSchema.partial().parse(body)
 
@@ -109,7 +109,7 @@ export async function PUT(
 // DELETE - 删除等级
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -120,7 +120,7 @@ export async function DELETE(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     // 检查是否有用户使用该等级
     const usersWithTier = await prisma.user.count({

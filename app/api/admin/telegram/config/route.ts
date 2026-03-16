@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { getEnabledConfig, testTelegramConnection } from '@/lib/telegram'
 
 // GET - 获取 Telegram 配置

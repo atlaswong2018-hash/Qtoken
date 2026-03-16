@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 const ruleSchema = z.object({
@@ -77,10 +77,7 @@ export async function POST(request: Request) {
 }
 
 // PUT - 更新规则
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: any) {
   try {
     const session = await auth()
     if (!session?.user) {
@@ -90,7 +87,7 @@ export async function PUT(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
     const body = await request.json()
     const validatedData = ruleSchema.partial().parse(body)
 
@@ -110,10 +107,7 @@ export async function PUT(
 }
 
 // DELETE - 删除规则
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: any) {
   try {
     const session = await auth()
     if (!session?.user) {
@@ -123,7 +117,7 @@ export async function DELETE(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     await prisma.communityRule.delete({
       where: { id }

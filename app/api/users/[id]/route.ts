@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // GET - 获取用户详情
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params
+    const { id } = await context.params
 
     const user = await prisma.user.findUnique({
       where: { id },

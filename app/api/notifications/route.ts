@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // GET - 获取通知列表
 export async function GET(request: Request) {
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { userId, type, title, content, relatedPostId, relatedProjectId } = body
+    const { userId, type, title, content } = body
 
     const notification = await prisma.notification.create({
       data: {
@@ -63,8 +63,6 @@ export async function POST(request: Request) {
         type,
         title,
         content,
-        relatedPostId,
-        relatedProjectId,
         read: false
       }
     })

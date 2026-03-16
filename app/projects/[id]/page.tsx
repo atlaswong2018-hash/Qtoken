@@ -32,6 +32,10 @@ interface Project {
       color: string
     }
   }
+  _count: {
+    likes: number
+    comments: number
+  }
 }
 
 export default function ProjectDetailPage() {

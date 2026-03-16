@@ -1,11 +1,10 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -26,6 +25,8 @@ model User {
   likes         Like[]
   posts         Post[]
   notifications Notification[]
+  communityMembers CommunityMember[]
+  ownedCommunities Community[] @relation("Community")
   tier          UserTier?  @relation(fields: [tierId], references: [id], onDelete: SetNull)
 
   @@index([tierId])
@@ -99,12 +100,31 @@ model Community {
   memberCount Int      @default(0)
   isPrivate   Boolean  @default(false)
   minTierRequired Int? // 最低等级要求
+  ownerId     String
   createdAt   DateTime @default(now())
 
+  owner       User     @relation("Community", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     CommunityMember[]
   posts       Post[]
 
+  @@index([ownerId])
   @@index([isPrivate])
   @@index([minTierRequired])
+}
+
+model CommunityMember {
+  id         String   @id @default(cuid())
+  userId     String
+  communityId String
+  role        String   @default("member") // 'member', 'moderator', 'admin'
+  joinedAt   DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, communityId])
+  @@index([communityId])
+  @@index([userId])
 }
 
 model Post {
@@ -120,9 +140,11 @@ model Post {
   authorId    String
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   communityId String
-  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  community   Community?  @relation(fields: [communityId], references: [id], onDelete: SetNull)
   comments    Comment[]
 
+  @@index([authorId])
+  @@index([createdAt])
   @@index([isPrivate])
   @@index([minTierRequired])
 }
@@ -136,7 +158,7 @@ model Comment {
   authorId   String
   author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   projectId  String?
-  project    Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project    Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   postId     String?
   post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
@@ -163,8 +185,6 @@ model Notification {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model TelegramConfig {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { auth } from '@/lib/auth-config'
 import { z } from 'zod'
 
@@ -103,11 +103,10 @@ export async function POST(request: Request) {
                 level: true,
                 color: true
               }
-  }
+            }
           }
         }
       }
-    }
     })
 
     return NextResponse.json({ comment }, { status: 201 })

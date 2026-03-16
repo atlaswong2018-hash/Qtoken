@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth-config'
+import prisma from '@/lib/prisma'
 
 // GET - 检查数据库初始化状态
 export async function GET(request: Request) {
@@ -41,11 +42,13 @@ export async function POST(request: Request) {
     // 检查权限
     const isAdmin = await prisma.userTier.findFirst({
       where: {
-        userId: session.user.id,
-        tier: {
-          permissions: {
-            has: 'configure_system'
+        users: {
+          some: {
+            id: session.user.id
           }
+        },
+        permissions: {
+          has: 'configure_system'
         }
       }
     })
@@ -209,7 +212,7 @@ export async function POST(request: Request) {
     console.log('开始创建默认社区规则...')
     for (const rule of defaultRules) {
       await prisma.communityRule.upsert({
-        where: { title: rule.title },
+        where: { id: rule.title },
         update: {},
         create: rule
       })

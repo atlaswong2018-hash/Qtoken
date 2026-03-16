@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // GET - 获取帖子详情
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params
+    const { id } = await context.params
 
     const post = await prisma.post.findUnique({
       where: { id },
@@ -31,12 +31,11 @@ export async function GET(
           select: {
             id: true,
             name: true,
-            avatar: true
+            icon: true
           }
         },
         _count: {
           select: {
-            likes: true,
             comments: true
           }
         }
@@ -100,7 +99,7 @@ export async function GET(
 // PUT - 更新帖子
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -111,7 +110,7 @@ export async function PUT(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
     const body = await request.json()
 
     // 查找帖子
@@ -170,12 +169,11 @@ export async function PUT(
           select: {
             id: true,
             name: true,
-            avatar: true
+            icon: true
           }
         },
         _count: {
           select: {
-            likes: true,
             comments: true
           }
         }
@@ -195,7 +193,7 @@ export async function PUT(
 // DELETE - 删除帖子
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -206,7 +204,7 @@ export async function DELETE(
       )
     }
 
-    const { id } = params
+    const { id } = await context.params
 
     // 查找帖子
     const post = await prisma.post.findUnique({

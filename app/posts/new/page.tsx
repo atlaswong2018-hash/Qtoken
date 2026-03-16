@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,10 +16,19 @@ import {
   X
 } from 'lucide-react'
 
+interface Community {
+  id: string
+  name: string
+  description: string | null
+  avatar: string | null
+  isPrivate: boolean
+  minTierRequired: number | null
+}
+
 export default function CreatePostPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [communities, setCommunities] = useState([])
+  const [communities, setCommunities] = useState<Community[]>([])
   const [formData, setFormData] = useState({
     title: '',
     content: '',

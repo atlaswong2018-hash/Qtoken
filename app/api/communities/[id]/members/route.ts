@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 const memberSchema = z.object({
@@ -10,10 +10,10 @@ const memberSchema = z.object({
 // GET - 获取社区成员列表
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id: communityId } = params
+    const { id: communityId } = await context.params
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
@@ -37,8 +37,8 @@ export async function GET(
                   level: true,
                   color: true
                 }
-  }
-}
+              }
+            }
           }
         },
         orderBy: { joinedAt: 'desc' }
@@ -67,7 +67,7 @@ export async function GET(
 // POST - 加入社区
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -78,7 +78,7 @@ export async function POST(
       )
     }
 
-    const { id: communityId } = params
+    const { id: communityId } = await context.params
 
     // 检查社区是否存在
     const community = await prisma.community.findUnique({
@@ -152,10 +152,10 @@ export async function POST(
                 level: true,
                 color: true
               }
-    }
+            }
+          }
         }
       }
-    }
     })
 
     return NextResponse.json({ member }, { status: 201 })
@@ -171,7 +171,7 @@ export async function POST(
 // DELETE - 退出社区
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -182,7 +182,7 @@ export async function DELETE(
       )
     }
 
-    const { id: communityId } = params
+    const { id: communityId } = await context.params
 
     // 查找成员记录
     const member = await prisma.communityMember.findFirst({
@@ -195,8 +195,8 @@ export async function DELETE(
           select: {
             ownerId: true
           }
-  }
-}
+        }
+      }
     })
 
     if (!member) {
@@ -221,8 +221,8 @@ export async function DELETE(
           userId: session.user.id,
           communityId
         }
-  }
-})
+      }
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {

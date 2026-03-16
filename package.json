@@ -23,13 +23,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/atlaswong2018-hash/Qtoken/issues"
   },
   "homepage": "https://github.com/atlaswong2018-hash/Qtoken#readme",
   "dependencies": {
-    "@prisma/client": "^7.5.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
@@ -43,10 +42,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@prisma/client": "^6.19.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^25.5.0",
+    "@types/node-telegram-bot-api": "^0.64.14",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.27",
@@ -55,7 +56,7 @@
     "lucide-react": "^0.577.0",
     "node-telegram-bot-api": "^0.67.0",
     "postcss": "^8.5.8",
-    "prisma": "^7.5.0",
+    "prisma": "^6.19.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
     "tsx": "^4.21.0",

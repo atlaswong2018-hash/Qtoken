@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth-config'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 const updateTierSchema = z.object({
@@ -10,7 +10,7 @@ const updateTierSchema = z.object({
 // PUT - 更新用户等级
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth()
@@ -38,7 +38,7 @@ export async function PUT(
       )
     }
 
-    const { id: userId } = params
+    const { id: userId } = await context.params
     const body = await request.json()
     const { tierId } = updateTierSchema.parse(body)
 

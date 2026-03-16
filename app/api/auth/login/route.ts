@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { loginSchema } from '@/lib/validations'
 import { verifyPassword } from '@/lib/auth'
 import { signIn } from '@/lib/auth-config'
@@ -12,7 +12,12 @@ export async function POST(request: Request) {
     // 查找用户
     const user = await prisma.user.findUnique({
       where: { email: validatedData.email },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatar: true,
+        passwordHash: true,
         tier: {
           select: {
             id: true,
@@ -33,7 +38,7 @@ export async function POST(request: Request) {
     }
 
     // 验证密码
-    const isPasswordValid = await verifyPassword(validatedData.password, user.password)
+    const isPasswordValid = await verifyPassword(validatedData.password, user.passwordHash)
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -57,7 +62,7 @@ export async function POST(request: Request) {
     }
 
     // 返回用户信息（不包含密码）
-    const { password: _, ...userWithoutPassword } = user
+    const { passwordHash: _, ...userWithoutPassword } = user
 
     return NextResponse.json({
       message: '登录成功',

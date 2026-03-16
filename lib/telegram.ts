@@ -1,5 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api'
-import { prisma } from './prisma'
+import prisma from './prisma'
 
 interface ProjectData {
   id: string
@@ -27,7 +27,7 @@ interface PostData {
 /**
  * 获取启用的 Telegram 配置
  */
-async function getEnabledConfig() {
+export async function getEnabledConfig() {
   const config = await prisma.telegramConfig.findFirst({
     where: { enabled: true }
   })
@@ -131,7 +131,7 @@ export async function testTelegramConnection(): Promise<{ success: boolean; mess
     await bot.getMe()
 
     return { success: true, message: 'Telegram Bot 连接成功' }
-  } catch (error: {
+  } catch (error) {
     console.error('Telegram 连接测试失败:', error)
     return { success: false, message: '连接失败' }
   }

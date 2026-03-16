@@ -28,9 +28,10 @@ interface Notification {
 
 interface NotificationsProps {
   userId: string
+  onUnreadChange?: (count: number) => void
 }
 
-export default function Notifications({ userId }: NotificationsProps) {
+export default function Notifications({ userId, onUnreadChange }: NotificationsProps) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -41,7 +42,9 @@ export default function Notifications({ userId }: NotificationsProps) {
       const response = await fetch(`/api/notifications?userId=${userId}`)
       const data = await response.json()
       setNotifications(data.notifications || [])
-      setUnreadCount(data.notifications?.filter((n: Notification) => !n.read).length || 0)
+      const unread = data.notifications?.filter((n: Notification) => !n.read).length || 0
+      setUnreadCount(unread)
+      onUnreadChange?.(unread)
     } catch (error) {
       console.error('获取通知失败:', error)
     }
@@ -76,7 +79,11 @@ export default function Notifications({ userId }: NotificationsProps) {
           n.id === notificationId ? { ...n, read: true } : n
         )
       )
-      setUnreadCount(prev => Math.max(0, prev - 1))
+      setUnreadCount(prev => {
+        const newCount = Math.max(0, prev - 1)
+        onUnreadChange?.(newCount)
+        return newCount
+      })
     } catch (error) {
       console.error('标记为已读失败:', error)
     }
@@ -92,6 +99,7 @@ export default function Notifications({ userId }: NotificationsProps) {
         prev.map(n => ({ ...n, read: true }))
       )
       setUnreadCount(0)
+      onUnreadChange?.(0)
     } catch (error) {
       console.error('标记全部已读失败:', error)
     }

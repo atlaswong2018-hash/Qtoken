@@ -13,7 +13,8 @@ import {
   UserPlus,
   Settings,
   Lock,
-  Shield
+  Shield,
+  Heart
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -41,14 +42,44 @@ interface CommunityDetail {
   }
 }
 
+interface CommunityMember {
+  id: string
+  user: {
+    id: string
+    username: string
+    avatar: string | null
+    tier?: {
+      name: string
+      color: string
+    }
+  }
+  joinedAt: Date
+}
+
+interface Post {
+  id: string
+  title: string
+  content: string
+  author: {
+    id: string
+    username: string
+    avatar: string | null
+  }
+  _count: {
+    comments: number
+    likes: number
+  }
+  createdAt: Date
+}
+
 export default function CommunityDetailPage() {
   const params = useParams()
   const router = useRouter()
   const [community, setCommunity] = useState<CommunityDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
-  const [posts, setPosts] = useState([])
-  const [members, setMembers] = useState([])
+  const [posts, setPosts] = useState<Post[]>([])
+  const [members, setMembers] = useState<CommunityMember[]>([])
   const [error, setError] = useState('')
 
   const communityId = params.id

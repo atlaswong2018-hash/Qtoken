@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { registerSchema } from '@/lib/validations'
 import { hashPassword } from '@/lib/auth'
 
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       data: {
         email: validatedData.email,
         username: validatedData.username,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         tierId: '1' // 默认为新用户等级
       },
       select: {
